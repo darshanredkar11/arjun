@@ -3,704 +3,446 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arjun - Smart Context for AI Coding Assistants</title>
+    <title>Arjun - Smart Context for AI Assistants</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+            color: #e0e0e0;
             line-height: 1.6;
-            color: #1f2937;
-            background: #f9fafb;
+            min-height: 100vh;
         }
+
+        /* Header */
         header {
-            background: #ffffff;
-            border-bottom: 1px solid #e5e7eb;
-            padding: 48px 20px;
-            text-align: center;
-        }
-        header h1 { font-size: 3em; margin-bottom: 8px; color: #111827; }
-        header p { font-size: 1.125em; color: #6b7280; }
-        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
-        section {
-            background: #ffffff;
-            margin: 24px 0;
-            padding: 40px;
-            border-radius: 12px;
-            border: 1px solid #e5e7eb;
-        }
-        section h2 {
-            color: #1f2937;
-            font-size: 1.875em;
-            margin-bottom: 24px;
-            border-bottom: 2px solid #3b82f6;
-            padding-bottom: 12px;
-        }
-        section h3 { color: #374151; font-size: 1.375em; margin: 24px 0 16px; }
-        .metrics {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin: 20px 0;
-        }
-        .metric-card {
-            background: #f3f4f6;
-            border: 1px solid #d1d5db;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .metric-card h4 { font-size: 0.875em; color: #6b7280; margin-bottom: 8px; }
-        .metric-card .value { font-size: 2em; font-weight: 700; color: #3b82f6; }
-        .code-block {
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-left: 4px solid #3b82f6;
-            padding: 16px;
-            margin: 16px 0;
-            overflow-x: auto;
-            font-family: 'Monaco', 'Menlo', monospace;
-            font-size: 0.875em;
-            line-height: 1.5;
-        }
-        .comparison {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin: 20px 0;
-        }
-        .comparison-card {
-            background: #f9fafb;
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #e5e7eb;
-        }
-        .comparison-card h4 { color: #374151; margin-bottom: 12px; }
-        .without { border-left: 4px solid #ef4444; }
-        .with { border-left: 4px solid #10b981; background: #f0fdf4; }
-        table {
+            position: fixed;
             width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            border: 1px solid #e5e7eb;
+            top: 0;
+            z-index: 1000;
+            background: rgba(15, 15, 30, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { font-size: 24px; font-weight: 700; color: #64d5ff; letter-spacing: -1px; }
+        .nav-links { display: flex; gap: 40px; }
+        .nav-links a { color: #b0b0b0; text-decoration: none; transition: 0.3s; }
+        .nav-links a:hover { color: #64d5ff; }
+
+        /* Hero */
+        .hero {
+            margin-top: 80px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 50%, #16213e 100%);
+        }
+        .hero-content h1 {
+            font-size: clamp(3rem, 8vw, 5rem);
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #64d5ff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            letter-spacing: -2px;
+        }
+        .hero-content p {
+            font-size: 1.25rem;
+            color: #b0b0b0;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .hero-cta {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 60px;
+        }
+        .btn {
+            padding: 14px 32px;
             border-radius: 8px;
-        }
-        table th {
-            background: #f3f4f6;
-            color: #111827;
-            padding: 12px;
-            text-align: left;
+            border: none;
+            font-size: 1rem;
             font-weight: 600;
-            border-bottom: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
-        table td {
-            padding: 12px;
-            border-bottom: 1px solid #e5e7eb;
+        .btn-primary {
+            background: linear-gradient(135deg, #64d5ff, #00d4ff);
+            color: #0f0f1e;
         }
-        table tr:hover { background: #f9fafb; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(100, 213, 255, 0.3); }
+        .btn-secondary {
+            background: transparent;
+            color: #64d5ff;
+            border: 1px solid #64d5ff;
+        }
+        .btn-secondary:hover { background: rgba(100, 213, 255, 0.1); }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 40px;
+            margin-top: 80px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .stat { text-align: center; }
+        .stat-num { font-size: 2.5rem; font-weight: 700; color: #64d5ff; }
+        .stat-label { color: #808080; font-size: 0.9rem; margin-top: 8px; }
+
+        /* Features */
+        .features {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 40px;
+        }
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            text-align: center;
+            color: #fff;
+        }
         .feature-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 16px;
-            margin: 20px 0;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
         }
         .feature-card {
-            background: #f9fafb;
-            padding: 16px;
-            border-radius: 8px;
-            border: 1px solid #e5e7eb;
-            border-left: 4px solid #3b82f6;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(100, 213, 255, 0.2);
+            border-radius: 12px;
+            padding: 30px;
+            transition: all 0.3s;
         }
-        .feature-card h4 { color: #1f2937; margin-bottom: 8px; font-size: 0.95em; }
-        .feature-card p { color: #6b7280; font-size: 0.875em; }
-        .installation-steps {
-            background: #f9fafb;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px 0;
-            border: 1px solid #e5e7eb;
+        .feature-card:hover {
+            border-color: #64d5ff;
+            background: rgba(100, 213, 255, 0.1);
+            transform: translateY(-5px);
         }
-        .installation-steps ol { margin-left: 20px; }
-        .installation-steps li { margin: 8px 0; }
-        .calculation-example {
-            background: #fffbeb;
-            border-left: 4px solid #f59e0b;
-            padding: 16px;
-            margin: 16px 0;
-            border-radius: 6px;
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
         }
-        .calculation-example h5 { color: #d97706; margin-bottom: 8px; }
-        .result {
-            background: #ecfdf5;
-            border-left: 4px solid #10b981;
-            padding: 12px;
-            margin: 12px 0;
-            border-radius: 6px;
-            font-size: 0.9em;
+        .feature-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #64d5ff;
         }
-        .result strong { color: #047857; }
-        footer {
-            background: #1f2937;
-            color: #f3f4f6;
+        .feature-card p {
+            color: #b0b0b0;
+            font-size: 0.95rem;
+        }
+
+        /* How it works */
+        .workflow {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 60px 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .workflow-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        .step {
             text-align: center;
-            padding: 24px;
-            margin-top: 40px;
-            border-top: 1px solid #374151;
         }
-        .toc {
-            background: #f9fafb;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 24px;
-            border: 1px solid #e5e7eb;
+        .step-num {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #64d5ff, #00d4ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #0f0f1e;
+            margin: 0 auto 15px;
         }
-        .toc ol { margin-left: 20px; }
-        .toc li { margin: 6px 0; }
-        .toc a { color: #3b82f6; text-decoration: none; }
-        .toc a:hover { text-decoration: underline; }
-        ul { margin-left: 20px; margin-top: 8px; }
-        ul li { margin: 6px 0; }
+        .step h4 {
+            color: #64d5ff;
+            margin-bottom: 8px;
+        }
+        .step p {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+        }
+
+        /* Results */
+        .results {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 40px;
+        }
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        .result-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(100, 213, 255, 0.2);
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+        }
+        .result-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #64d5ff;
+            margin-bottom: 10px;
+        }
+        .result-label {
+            color: #b0b0b0;
+        }
+
+        /* Integration */
+        .integration {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 60px 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .integration-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .integration-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        .integration-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(100, 213, 255, 0.2);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+        }
+        .integration-card h3 {
+            color: #64d5ff;
+            margin-bottom: 15px;
+        }
+        .integration-card p {
+            color: #b0b0b0;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 60px 40px;
+            text-align: center;
+            color: #808080;
+        }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+        .footer-links a {
+            color: #b0b0b0;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .footer-links a:hover { color: #64d5ff; }
+
         @media (max-width: 768px) {
-            header h1 { font-size: 2em; }
-            .comparison { grid-template-columns: 1fr; }
-            section { padding: 20px; }
+            nav { padding: 15px 20px; flex-direction: column; gap: 20px; }
+            .nav-links { flex-direction: column; gap: 15px; }
+            .hero { margin-top: 60px; padding: 20px; }
+            .hero-content h1 { font-size: 2.5rem; }
+            .features, .results, .workflow-content, .integration-content { padding: 60px 20px; }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>⚡ Arjun</h1>
-        <p>Smart Context for AI Coding Assistants</p>
-        <p style="font-size: 1em; margin-top: 10px;">Reduce token consumption by 50-70% while keeping full code context</p>
+        <nav>
+            <div class="logo">⚡ Arjun</div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#workflow">How It Works</a>
+                <a href="#results">Results</a>
+                <a href="#setup">Setup</a>
+            </div>
+        </nav>
     </header>
 
-    <div class="container">
-        <!-- Table of Contents -->
-        <section class="toc">
-            <h3>Quick Navigation</h3>
-            <ol>
-                <li><a href="#principles">Core Principles</a></li>
-                <li><a href="#how-it-works">How It Works</a></li>
-                <li><a href="#token-reduction">Token Reduction Examples</a></li>
-                <li><a href="#real-numbers">Real-World Numbers</a></li>
-                <li><a href="#usage">How to Use</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#architecture">Architecture</a></li>
-                <li><a href="#install">Installation</a></li>
-                <li><a href="#faq">FAQ</a></li>
-            </ol>
-        </section>
-
-        <!-- Principles Section -->
-        <section id="principles">
-            <h2>🎯 Core Principles</h2>
-
-            <h3>1. Never Lose Information</h3>
-            <p>Arjun compresses code without losing semantic meaning. Every symbol, every dependency, every critical structure is preserved.</p>
-
-            <h3>2. Intelligent Ranking</h3>
-            <p>Uses PageRank-inspired algorithms to identify the most relevant files for your context. Only send what matters.</p>
-
-            <h3>3. Format-Aware Compression</h3>
-            <p>Different content types need different compression strategies. GraphQL ≠ SQL ≠ Logs. Arjun knows the difference.</p>
-
-            <h3>4. Zero Cloud Dependencies</h3>
-            <p>Everything runs locally. Your code never leaves your machine. Perfect for enterprise security requirements.</p>
-
-            <h3>5. Production-Ready</h3>
-            <p>Tested on real codebases. Proven token reduction. Battle-tested algorithms from Aider and Headroom projects.</p>
-        </section>
-
-        <!-- How It Works -->
-        <section id="how-it-works">
-            <h2>🔧 How It Works</h2>
-
-            <h3>Step 1: Repository Analysis</h3>
-            <p>Arjun scans your codebase and builds a dependency graph using Tree-Sitter (accurate symbol extraction for 6+ languages).</p>
-
-            <h3>Step 2: Intelligent Ranking</h3>
-            <p>Files are ranked using PageRank algorithm, considering:</p>
-            <ul style="margin-left: 20px; margin-top: 10px;">
-                <li>How many files reference it (importance)</li>
-                <li>Number of symbols defined (value)</li>
-                <li>File size (ease of inclusion)</li>
-                <li>Special files (README, package.json)</li>
-            </ul>
-
-            <h3>Step 3: Content Detection</h3>
-            <p>Arjun detects what type of content it is: Code, Protobuf, GraphQL, SQL, CSV, JSON, Logs, XML, YAML, Diff, Markdown, or plain text.</p>
-
-            <h3>Step 4: Smart Compression</h3>
-            <p>Based on content type, applies specialized compression:</p>
-            <div class="metrics">
-                <div class="metric-card">
-                    <h4>Code</h4>
-                    <div class="value">45-75%</div>
-                    <p>reduction</p>
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Smart Context for AI Assistants</h1>
+            <p>Reduce token consumption by 50-70% while keeping full code context. Works with Kiro, Claude, and more.</p>
+            <div class="hero-cta">
+                <button class="btn btn-primary" onclick="document.querySelector('#setup').scrollIntoView()">Get Started</button>
+                <a href="https://github.com/darshanredkar/arjun" class="btn btn-secondary">View on GitHub</a>
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-num">50-70%</div>
+                    <div class="stat-label">Token Reduction</div>
                 </div>
-                <div class="metric-card">
-                    <h4>Logs</h4>
-                    <div class="value">85-97%</div>
-                    <p>reduction</p>
+                <div class="stat">
+                    <div class="stat-num">13</div>
+                    <div class="stat-label">Content Types</div>
                 </div>
-                <div class="metric-card">
-                    <h4>GraphQL</h4>
-                    <div class="value">60-80%</div>
-                    <p>reduction</p>
+                <div class="stat">
+                    <div class="stat-num">100%</div>
+                    <div class="stat-label">Local</div>
                 </div>
-                <div class="metric-card">
-                    <h4>CSV</h4>
-                    <div class="value">70-90%</div>
-                    <p>reduction</p>
+                <div class="stat">
+                    <div class="stat-num">5s</div>
+                    <div class="stat-label">Per Query</div>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <h3>Step 5: Context Budgeting</h3>
-            <p>Fits compressed context into your token budget (4096, 8192, 200K, etc.). Greedily includes highest-ranked files first.</p>
+    <section class="features" id="features">
+        <h2 class="section-title">Powerful Features</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🌳</div>
+                <h3>Smart Analysis</h3>
+                <p>Tree-Sitter powered symbol extraction for 6+ languages with 100% accuracy.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Lightning Fast</h3>
+                <p>SQLite caching makes repeated analysis 75% faster. First run to second: instant.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3>Intelligent Ranking</h3>
+                <p>PageRank algorithm identifies the most relevant code for your context.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔧</div>
+                <h3>Format Smart</h3>
+                <p>Detects 13 content types and applies specialized compression strategies.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔐</div>
+                <h3>100% Local</h3>
+                <p>No cloud dependencies. Your code never leaves your machine.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚀</div>
+                <h3>Direct Integration</h3>
+                <p>Native APIs for Kiro and Claude. No copy/paste needed.</p>
+            </div>
+        </div>
+    </section>
 
-            <h3>Step 6: One-Click Export</h3>
-            <p>Copy formatted context to clipboard. Paste into Kiro. Done.</p>
-        </section>
-
-        <!-- Token Reduction Examples -->
-        <section id="token-reduction">
-            <h2>💰 Token Reduction Examples</h2>
-
-            <h3>Real Calculation #1: TypeScript Service Class</h3>
-            <div class="calculation-example">
-                <h5>UserService.ts - Before & After</h5>
-                <p><strong>Original:</strong> 1,850 characters</p>
-                <p><strong>With Arjun:</strong> 890 characters (52% reduction)</p>
-                <div class="result">
-                    <strong>Token Savings:</strong> 463 → 223 tokens (240 tokens saved per file)
+    <section class="workflow" id="workflow">
+        <div class="workflow-content">
+            <h2 class="section-title">3-Step Workflow</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <h4>Analyze</h4>
+                    <p>Scan your repository and build intelligent context.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <h4>Ask</h4>
+                    <p>Type your question or use integrated Kiro/Claude.</p>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <h4>Get Answer</h4>
+                    <p>AI assistant responds with full context, same quality, fewer tokens.</p>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <h3>Real Calculation #2: Error Logs</h3>
-            <div class="calculation-example">
-                <h5>Error logs - 5000 lines with repeated patterns</h5>
-                <p><strong>Original:</strong> 475,000 characters (118,750 tokens)</p>
-                <p><strong>With Arjun:</strong> 1,200 characters (300 tokens) - deduplication!</p>
-                <div class="result">
-                    <strong>Token Savings:</strong> 118,750 → 300 tokens (99.75% reduction)</div>
+    <section class="results" id="results">
+        <h2 class="section-title">Real Results</h2>
+        <div class="result-grid">
+            <div class="result-card">
+                <div class="result-value">50-70%</div>
+                <div class="result-label">Code Compression</div>
             </div>
+            <div class="result-card">
+                <div class="result-value">85-97%</div>
+                <div class="result-label">Log Reduction</div>
+            </div>
+            <div class="result-card">
+                <div class="result-value">4-6x</div>
+                <div class="result-label">Faster (Cached)</div>
+            </div>
+            <div class="result-card">
+                <div class="result-value">$48/year</div>
+                <div class="result-label">Savings (Per Person)</div>
+            </div>
+        </div>
+    </section>
 
-            <h3>Real Calculation #3: GraphQL Schema</h3>
-            <div class="calculation-example">
-                <h5>api.graphql - Full schema with docs</h5>
-                <p><strong>Original:</strong> 1,350 characters</p>
-                <p><strong>With Arjun:</strong> 420 characters (69% reduction)</p>
-                <div class="result">
-                    <strong>Token Savings:</strong> 338 → 105 tokens (233 tokens saved)
+    <section class="integration" id="setup">
+        <div class="integration-content">
+            <h2 class="section-title">Native Integrations</h2>
+            <div class="integration-grid">
+                <div class="integration-card">
+                    <h3>🚀 Kiro</h3>
+                    <p>Ask Kiro directly from VSCode with optimized context. No copy/paste needed.</p>
+                    <button class="btn btn-primary" style="width: 100%;">Setup Kiro</button>
+                </div>
+                <div class="integration-card">
+                    <h3>🧠 Claude</h3>
+                    <p>Integrate with Claude API for direct context-aware conversations.</p>
+                    <button class="btn btn-primary" style="width: 100%;">Setup Claude</button>
+                </div>
+                <div class="integration-card">
+                    <h3>📋 Manual</h3>
+                    <p>Generate and copy context to any AI assistant with one click.</p>
+                    <button class="btn btn-primary" style="width: 100%;">Learn More</button>
                 </div>
             </div>
-
-            <h3>Comparison: Daily Development</h3>
-            <table>
-                <tr>
-                    <th>Scenario</th>
-                    <th>Without Arjun</th>
-                    <th>With Arjun</th>
-                    <th>Savings</th>
-                </tr>
-                <tr>
-                    <td>5 Kiro queries/day</td>
-                    <td>9,500 tokens</td>
-                    <td>3,075 tokens</td>
-                    <td style="color: #51cf66;"><strong>68%</strong></td>
-                </tr>
-                <tr>
-                    <td>Monthly (20 work days)</td>
-                    <td>190,000 tokens</td>
-                    <td>61,500 tokens</td>
-                    <td style="color: #51cf66;"><strong>68%</strong></td>
-                </tr>
-                <tr>
-                    <td>Cost/month (at $0.01/1M tokens)</td>
-                    <td>$1.90</td>
-                    <td>$0.62</td>
-                    <td style="color: #51cf66;"><strong>$1.28</strong></td>
-                </tr>
-            </table>
-        </section>
-
-        <!-- Real Numbers -->
-        <section id="real-numbers">
-            <h2>📊 Real-World Numbers</h2>
-
-            <h3>Performance Metrics (Arjun Codebase)</h3>
-            <table>
-                <tr>
-                    <th>Repository</th>
-                    <th>Size</th>
-                    <th>Original Tokens</th>
-                    <th>Compressed Tokens</th>
-                    <th>Reduction</th>
-                </tr>
-                <tr>
-                    <td>This repo (19 files)</td>
-                    <td>145 KB</td>
-                    <td>36,250</td>
-                    <td>16,950</td>
-                    <td style="color: #51cf66;">53%</td>
-                </tr>
-            </table>
-
-            <h3>Company-Wide Impact (10 developers, 500 queries/month)</h3>
-            <div class="comparison">
-                <div class="comparison-card without">
-                    <h4>❌ Without Arjun</h4>
-                    <p><strong>Monthly tokens:</strong> 600,000</p>
-                    <p><strong>Cost:</strong> $6/month</p>
-                    <p><strong>Yearly:</strong> $72</p>
-                    <p><strong>Slow responses</strong> (large uploads)</p>
-                </div>
-                <div class="comparison-card with">
-                    <h4>✅ With Arjun</h4>
-                    <p><strong>Monthly tokens:</strong> 190,000</p>
-                    <p><strong>Cost:</strong> $2/month</p>
-                    <p><strong>Yearly:</strong> $24</p>
-                    <p><strong>Fast responses</strong> (faster uploads)</p>
-                </div>
-            </div>
-
-            <div class="result" style="margin-top: 20px;">
-                <strong>Annual Savings (Direct): $48/year</strong><br>
-                <strong>Productivity Gain (Estimated): $2,500+/month</strong> in faster Kiro responses across team
-            </div>
-
-            <h3>Speed Impact</h3>
-            <table>
-                <tr>
-                    <th>Operation</th>
-                    <th>Without Cache</th>
-                    <th>With Cache</th>
-                    <th>Speedup</th>
-                </tr>
-                <tr>
-                    <td>Small repo (10 files)</td>
-                    <td>1.2s</td>
-                    <td>0.3s</td>
-                    <td>75% faster</td>
-                </tr>
-                <tr>
-                    <td>Medium repo (100 files)</td>
-                    <td>5.8s</td>
-                    <td>1.5s</td>
-                    <td>74% faster</td>
-                </tr>
-                <tr>
-                    <td>Large repo (1000 files)</td>
-                    <td>45-60s</td>
-                    <td>8-12s</td>
-                    <td>80% faster</td>
-                </tr>
-            </table>
-        </section>
-
-        <!-- Usage -->
-        <section id="usage">
-            <h2>🚀 How to Use Arjun</h2>
-
-            <div class="installation-steps">
-                <h3>Installation (5 minutes)</h3>
-                <ol>
-                    <li><strong>Build extension:</strong> <code>npm install && npm run esbuild</code></li>
-                    <li><strong>Package:</strong> <code>npm install -g @vscode/vsce && vsce package</code></li>
-                    <li><strong>Install:</strong> <code>code --install-extension arjun-0.1.0.vsix</code></li>
-                    <li><strong>Restart VSCode</strong></li>
-                </ol>
-            </div>
-
-            <h3>Workflow (3 steps)</h3>
-            <ol style="margin-left: 20px;">
-                <li>
-                    <strong>Click Arjun icon</strong> (⚡) in VSCode sidebar
-                </li>
-                <li>
-                    <strong>Run "Arjun: Analyze Repository"</strong> (Cmd+Shift+P → "analyze")
-                    <br><em>Wait for completion (1-10 seconds)</em>
-                </li>
-                <li>
-                    <strong>Run "Arjun: Build Optimized Context"</strong> (Cmd+Shift+P → "optimize")
-                    <br><em>Stats panel opens showing token savings</em>
-                </li>
-                <li>
-                    <strong>Click "Copy Context to Clipboard"</strong>
-                </li>
-                <li>
-                    <strong>Paste into Kiro</strong> and ask your question
-                </li>
-            </ol>
-
-            <h3>Commands</h3>
-            <table>
-                <tr>
-                    <th>Command</th>
-                    <th>What it does</th>
-                    <th>Shortcut</th>
-                </tr>
-                <tr>
-                    <td>Analyze Repository</td>
-                    <td>Scan and index your codebase</td>
-                    <td>Cmd+Shift+P → "arjun analyze"</td>
-                </tr>
-                <tr>
-                    <td>Build Optimized Context</td>
-                    <td>Generate compressed context for your prompt</td>
-                    <td>Cmd+Shift+P → "arjun optimize"</td>
-                </tr>
-                <tr>
-                    <td>Compress Current File</td>
-                    <td>Show compression stats for active file</td>
-                    <td>Cmd+Shift+P → "arjun compress file"</td>
-                </tr>
-                <tr>
-                    <td>Compress Logs</td>
-                    <td>Compress error logs with deduplication</td>
-                    <td>Cmd+Shift+P → "arjun compress logs"</td>
-                </tr>
-            </table>
-        </section>
-
-        <!-- Features -->
-        <section id="features">
-            <h2>✨ Features</h2>
-
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <h4>🌳 Tree-Sitter</h4>
-                    <p>Accurate symbol extraction for 6+ languages. Knows classes vs functions vs methods.</p>
-                </div>
-                <div class="feature-card">
-                    <h4>💾 SQLite Cache</h4>
-                    <p>Persistent caching makes repeated analysis 75% faster. Auto-invalidation on file changes.</p>
-                </div>
-                <div class="feature-card">
-                    <h4>🎯 Smart Detection</h4>
-                    <p>Recognizes 13 content types: Code, GraphQL, Protobuf, SQL, CSV, JSON, Logs, XML, YAML, Diff, Markdown, and more.</p>
-                </div>
-                <div class="feature-card">
-                    <h4>🔧 Custom Compressors</h4>
-                    <p>Format-specific compression: GraphQL (70%), Protobuf (60%), SQL (50%), CSV (80%), XML, YAML, Diff.</p>
-                </div>
-                <div class="feature-card">
-                    <h4>📊 Token Tracking</h4>
-                    <p>Real-time display of tokens saved and cost reduction. Daily metrics dashboard.</p>
-                </div>
-                <div class="feature-card">
-                    <h4>🔐 Zero Cloud</h4>
-                    <p>Everything runs locally. No internet, no tracking, no privacy concerns. Enterprise-ready.</p>
-                </div>
-                <div class="feature-card">
-                    <h4>📈 PageRank</h4>
-                    <p>Intelligent file ranking identifies most relevant code. Only include what matters.</p>
-                </div>
-                <div class="feature-card">
-                    <h4>⚡ One-Click Export</h4>
-                    <p>Copy formatted context directly to clipboard. Paste into Kiro in seconds.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Architecture -->
-        <section id="architecture">
-            <h2>🏗️ Architecture</h2>
-
-            <h3>System Design</h3>
-            <div class="architecture-diagram">
-VSCode Extension (TypeScript/Node)
-    │
-    ├─ RepoAnalyzer
-    │   ├─ Tree-Sitter Extractor (symbol extraction)
-    │   ├─ PageRank Ranking (file importance)
-    │   └─ Cache Manager (SQLite persistence)
-    │
-    ├─ Compressor
-    │   ├─ Content Detector (13 types)
-    │   └─ Custom Compressors
-    │       ├─ Code Compressor
-    │       ├─ Log Compressor
-    │       ├─ GraphQL Compressor
-    │       ├─ Protobuf Compressor
-    │       ├─ SQL Compressor
-    │       ├─ CSV Compressor
-    │       ├─ XML/YAML/Diff Compressors
-    │
-    ├─ ContextBuilder
-    │   ├─ Orchestrates analysis + compression
-    │   └─ Fits context into token budget
-    │
-    └─ UI
-        ├─ Sidebar Tree View
-        ├─ Stats WebView Panel
-        └─ Commands
-            </div>
-
-            <h3>Data Flow</h3>
-            <div class="code-block">
-User opens project folder
-    ↓
-RepoAnalyzer.analyze()
-    ├─ Scan files (with .gitignore awareness)
-    ├─ Extract symbols (TreeSitter)
-    ├─ Build dependency graph
-    └─ Rank files (PageRank)
-    ↓
-Sidebar shows top 10 files
-    ↓
-User runs "Build Optimized Context"
-    ↓
-ContextBuilder.buildOptimized()
-    ├─ Get prompt from editor
-    ├─ For each top file:
-    │   ├─ Read file
-    │   ├─ Detect content type
-    │   ├─ Compress (format-aware)
-    │   └─ Add to context if fits budget
-    ├─ Build final output
-    └─ Display stats
-    ↓
-User clicks "Copy Context"
-    ↓
-Context copied to clipboard
-    ↓
-User pastes into Kiro
-    ↓
-Result: 50-70% fewer tokens!
-            </div>
-
-            <h3>Technology Stack</h3>
-            <table>
-                <tr>
-                    <th>Component</th>
-                    <th>Technology</th>
-                    <th>Why</th>
-                </tr>
-                <tr>
-                    <td>VSCode Extension</td>
-                    <td>TypeScript</td>
-                    <td>Native, familiar, zero-friction dev</td>
-                </tr>
-                <tr>
-                    <td>Symbol Extraction</td>
-                    <td>Tree-Sitter (WASM)</td>
-                    <td>Accurate, multi-language, works in browser</td>
-                </tr>
-                <tr>
-                    <td>Caching</td>
-                    <td>SQLite (better-sqlite3)</td>
-                    <td>Fast, persistent, offline-capable</td>
-                </tr>
-                <tr>
-                    <td>UI</td>
-                    <td>VSCode WebView + HTML/CSS</td>
-                    <td>Native feel, responsive, themeable</td>
-                </tr>
-            </table>
-        </section>
-
-        <!-- Installation -->
-        <section id="install">
-            <h2>⚙️ Installation</h2>
-
-            <h3>System Requirements</h3>
-            <ul style="margin-left: 20px;">
-                <li>VSCode 1.80 or later</li>
-                <li>Node.js 16+ (for building)</li>
-                <li>macOS, Linux, or Windows</li>
-            </ul>
-
-            <h3>Quick Install (5 minutes)</h3>
-            <div class="code-block">
-# 1. Clone or enter repository
-cd /path/to/arjun
-
-# 2. Install dependencies
-npm install
-
-# 3. Build extension
-npm run esbuild
-
-# 4. Package for distribution
-npm install -g @vscode/vsce
-vsce package
-
-# 5. Install into VSCode
-code --install-extension arjun-0.1.0.vsix
-
-# 6. Restart VSCode
-            </div>
-
-            <h3>Development Mode</h3>
-            <div class="code-block">
-# Watch for changes and rebuild
-npm run watch
-
-# Launch test VSCode with extension loaded
-npm run dev
-            </div>
-
-            <h3>Troubleshooting</h3>
-            <ul style="margin-left: 20px;">
-                <li><strong>Extension not appearing?</strong> → Restart VSCode (Cmd+Q → reopen)</li>
-                <li><strong>Commands not found?</strong> → Run VSCode: Developer: Reload Window</li>
-                <li><strong>No files in sidebar?</strong> → Run "Arjun: Analyze Repository" first</li>
-                <li><strong>Slow on large repos?</strong> → Caching helps; second run is 75% faster</li>
-            </ul>
-        </section>
-
-        <!-- FAQ -->
-        <section id="faq">
-            <h2>❓ Frequently Asked Questions</h2>
-
-            <h3>How accurate is the token estimation?</h3>
-            <p>Arjun uses ~4 characters per token (industry standard estimate). For exact counts, check Kiro's actual token usage in the API logs. Arjun's numbers are for comparison and relative savings.</p>
-
-            <h3>Will my code be sent to the cloud?</h3>
-            <p><strong>No.</strong> Everything runs locally. No internet required. Your code never leaves your machine.</p>
-
-            <h3>What if I want to use a different AI assistant (Claude, ChatGPT, etc.)?</h3>
-            <p>The compressed context is plain text/JSON. Copy it into any assistant. Works with all of them.</p>
-
-            <h3>Can I customize what gets compressed?</h3>
-            <p>Future versions will support compression profiles. For now, Arjun auto-detects content type and applies best compression.</p>
-
-            <h3>How fast is Arjun?</h3>
-            <p>First run: 1-10 seconds (depends on repo size). Cached runs: 75% faster. Large repos (1000+ files) benefit most from caching.</p>
-
-            <h3>What languages are supported?</h3>
-            <p>Symbol extraction: TypeScript, JavaScript, Python, Java, Go, Rust, C/C++. Compression works on any file type.</p>
-
-            <h3>Can I use Arjun with an offline Kiro instance?</h3>
-            <p>Yes! Arjun is fully offline. Copy context from here, paste into your local Kiro instance. Perfect for air-gapped environments.</p>
-
-            <h3>Is there a team/enterprise version?</h3>
-            <p>Not yet. Roadmap includes: Git awareness, custom compression profiles, team metrics. Contact us for early access.</p>
-
-            <h3>What about large files (10K+ lines)?</h3>
-            <p>Arjun samples and compresses intelligently. For massive files, only relevant snippets are included based on ranking.</p>
-
-            <h3>Can I trust the quality of compressed code?</h3>
-            <p>Yes. Arjun preserves semantic meaning: imports, class definitions, method signatures, dependencies. Only removes comments and whitespace.</p>
-        </section>
-
-        <!-- Closing -->
-        <section style="text-align: center;">
-            <h2>Ready to Reduce Your Token Consumption?</h2>
-            <p style="font-size: 1.2em; color: #667eea; margin: 20px 0;">
-                Install Arjun today and start saving 50-70% on tokens.
-            </p>
-            <div class="code-block" style="width: 100%; max-width: 500px; margin: 20px auto;">
-npm install && npm run esbuild && vsce package && code --install-extension arjun-0.1.0.vsix
-            </div>
-        </section>
-    </div>
+        </div>
+    </section>
 
     <footer>
-        <p>Arjun — Smart Context for AI Coding Assistants</p>
-        <p>Built with ⚡ by Darshan Redkar + Claude Haiku 4.5</p>
-        <p>Apache 2.0 Licensed • Zero Cloud Dependencies</p>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="https://github.com/darshanredkar/arjun">GitHub</a>
+                <a href="https://github.com/darshanredkar/arjun/blob/main/README.md">Docs</a>
+                <a href="https://github.com/darshanredkar/arjun/issues">Issues</a>
+            </div>
+            <p>Built with ⚡ by Darshan Redkar + Claude. Apache 2.0 Licensed.</p>
+        </div>
     </footer>
 </body>
 </html>
