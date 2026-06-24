@@ -1,0 +1,76 @@
+{
+  "name": "arjun",
+  "displayName": "Arjun - Smart Context for Kiro",
+  "description": "Reduce token consumption with intelligent context selection and compression",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "AI",
+    "Utilities"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "arjun.analyzeRepo",
+        "title": "Arjun: Analyze Repository"
+      },
+      {
+        "command": "arjun.showContext",
+        "title": "Arjun: Build Optimized Context"
+      },
+      {
+        "command": "arjun.compressFile",
+        "title": "Arjun: Compress Current File"
+      },
+      {
+        "command": "arjun.compressLogs",
+        "title": "Arjun: Compress Logs"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "arjun-explorer",
+          "title": "Arjun",
+          "icon": "$(zap)"
+        }
+      ]
+    },
+    "views": {
+      "arjun-explorer": [
+        {
+          "id": "arjun.stats",
+          "name": "Context Stats",
+          "type": "webview"
+        },
+        {
+          "id": "arjun.files",
+          "name": "Relevant Files",
+          "type": "tree"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run esbuild -- --minify",
+    "esbuild": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --platform=node --target=node16",
+    "watch": "npm run esbuild -- --watch",
+    "dev": "npm run esbuild && code --extensionDevelopmentPath=$PWD",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/vscode": "^1.80.0",
+    "esbuild": "^0.21.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "js-tokens": "^9.0.0"
+  }
+}
