@@ -80,7 +80,7 @@ export class Compressor {
     };
   }
 
-  async compressLogs(content: string): Promise<CompressionResult> {
+  compressLogs(content: string): CompressionResult {
     const lines = content.split('\n');
     const original = this.estimateTokens(content);
 

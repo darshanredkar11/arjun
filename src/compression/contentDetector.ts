@@ -66,9 +66,14 @@ export class ContentDetector {
     const trimmed = content.trim();
     const lines = content.split('\n');
 
-    // JSON detection
+    // JSON detection (high confidence, check first)
     if (this.isJson(trimmed)) {
       return { type: 'json', confidence: 0.98 };
+    }
+
+    // YAML detection (before logs - YAML lines look like logs without context)
+    if (this.isYaml(trimmed)) {
+      return { type: 'yaml', confidence: 0.80 };
     }
 
     // Protobuf detection
@@ -81,14 +86,14 @@ export class ContentDetector {
       return { type: 'graphql', confidence: 0.85 };
     }
 
-    // Log detection
-    if (this.isLogs(lines)) {
-      return { type: 'logs', confidence: 0.88 };
-    }
-
-    // Diff detection
+    // Diff detection (before logs)
     if (this.isDiff(lines)) {
       return { type: 'diff', confidence: 0.92 };
+    }
+
+    // Log detection (after YAML and Diff)
+    if (this.isLogs(lines)) {
+      return { type: 'logs', confidence: 0.88 };
     }
 
     // SQL detection
@@ -104,11 +109,6 @@ export class ContentDetector {
     // XML detection
     if (this.isXml(trimmed)) {
       return { type: 'xml', confidence: 0.92 };
-    }
-
-    // YAML detection
-    if (this.isYaml(trimmed)) {
-      return { type: 'yaml', confidence: 0.80 };
     }
 
     // Markdown detection
@@ -161,13 +161,14 @@ export class ContentDetector {
       /\d{4}-\d{2}-\d{2}/,
       /ERROR|WARN|INFO|DEBUG|FATAL/i,
       /Exception|Error|Traceback/,
+      /\[ERROR\]|\[WARN\]|\[INFO\]/,
     ];
 
     const matchingLines = lines
       .slice(0, Math.min(10, lines.length))
       .filter((line) => logPatterns.some((p) => p.test(line))).length;
 
-    return matchingLines >= 3;
+    return matchingLines >= 1;  // Lower threshold - even 1 strong log indicator is enough
   }
 
   private isDiff(lines: string[]): boolean {
@@ -204,8 +205,8 @@ export class ContentDetector {
 
   private isYaml(content: string): boolean {
     const lines = content.split('\n').slice(0, 10);
-    const yamlIndicators = lines.filter((line) => /^\s+[a-z_][a-z0-9_]*:\s+/i.test(line)).length;
-    return yamlIndicators >= 3;
+    const yamlIndicators = lines.filter((line) => /^\s*[a-z_][a-z0-9_-]*:\s+/i.test(line) || /^-\s+/.test(line.trim())).length;
+    return yamlIndicators >= 2;  // Lower threshold for YAML lists and structures
   }
 
   private isMarkdown(lines: string[]): boolean {

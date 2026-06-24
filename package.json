@@ -65,6 +65,7 @@
     "test": "jest"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^18.0.0",
     "@types/vscode": "^1.80.0",
     "esbuild": "^0.21.0",
