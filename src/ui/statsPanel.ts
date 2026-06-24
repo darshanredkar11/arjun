@@ -3,7 +3,7 @@ import * as vscode from 'vscode';
 export class StatsPanel {
   private panel: vscode.WebviewPanel | undefined;
 
-  constructor(private storageUri: string) {}
+  constructor() {}
 
   show(context: any): void {
     if (!this.panel) {
@@ -25,139 +25,217 @@ export class StatsPanel {
     const { tokenReport, stats, copyableOutput, topFiles } = context;
 
     const reduction = tokenReport.reduction || 0;
-    const savedColor = reduction > 50 ? '#4caf50' : reduction > 30 ? '#ff9800' : '#f44336';
+    const savedColor = reduction > 50 ? '#059669' : reduction > 30 ? '#d97706' : '#dc2626';
 
     return `
       <!DOCTYPE html>
       <html>
       <head>
         <style>
+          * { box-sizing: border-box; margin: 0; }
           body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            padding: 24px;
+            color: #1a1a2e;
+            background: #f8f9fb;
+            line-height: 1.5;
+          }
+          .card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
             padding: 20px;
-            color: #e0e0e0;
-            background: #1e1e1e;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
           }
           .header {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e5e7eb;
           }
           .icon {
-            font-size: 28px;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #fff;
+            flex-shrink: 0;
           }
           h1 {
             margin: 0;
-            font-size: 24px;
-            color: #fff;
+            font-size: 20px;
+            font-weight: 600;
+            color: #111827;
+            letter-spacing: -0.02em;
+          }
+          .header-sub {
+            color: #6b7280;
+            font-size: 13px;
+            margin-top: 2px;
+          }
+          .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
           }
           .stat-box {
-            background: #252526;
             border-left: 4px solid ${savedColor};
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 4px;
+            padding: 16px;
+            border-radius: 8px;
+            background: #f9fafb;
           }
           .stat-label {
-            color: #999;
-            font-size: 12px;
+            color: #6b7280;
+            font-size: 11px;
+            font-weight: 600;
             text-transform: uppercase;
-            margin-bottom: 5px;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
           }
           .stat-value {
             color: ${savedColor};
-            font-size: 24px;
-            font-weight: bold;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin-bottom: 2px;
           }
           .stat-secondary {
-            color: #ccc;
+            color: #9ca3af;
             font-size: 12px;
-            margin-top: 5px;
           }
           .files-section {
-            margin-top: 20px;
+            margin-top: 4px;
+          }
+          .files-section h3 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
           }
           .file-item {
-            background: #252526;
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 4px;
+            background: #f9fafb;
+            padding: 10px 12px;
+            margin-bottom: 6px;
+            border-radius: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border: 1px solid #f3f4f6;
           }
           .file-name {
-            color: #ce9178;
+            color: #4f46e5;
             font-size: 12px;
+            font-weight: 500;
+            font-family: 'SF Mono', 'Fira Code', 'Fira Mono', monospace;
           }
           .file-rank {
-            color: #9cdcfe;
-            font-size: 12px;
+            color: #9ca3af;
+            font-size: 11px;
+            font-weight: 500;
+            background: #f3f4f6;
+            padding: 2px 8px;
+            border-radius: 12px;
           }
           .action-button {
-            background: #007acc;
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
+            padding: 12px 24px;
+            border-radius: 10px;
             cursor: pointer;
-            margin-top: 15px;
             font-size: 14px;
+            font-weight: 500;
+            width: 100%;
+            transition: opacity 0.15s, transform 0.1s;
           }
           .action-button:hover {
-            background: #005a9e;
+            opacity: 0.9;
+          }
+          .action-button:active {
+            transform: scale(0.98);
           }
           .code-block {
-            background: #1e1e1e;
-            border: 1px solid #3e3e42;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            font-size: 11px;
-            color: #ce9178;
-            max-height: 200px;
+            background: #f8f9fb;
+            border: 1px solid #e5e7eb;
+            padding: 16px;
+            margin-top: 16px;
+            border-radius: 10px;
+            font-family: 'SF Mono', 'Fira Code', 'Fira Mono', 'Courier New', monospace;
+            font-size: 12px;
+            color: #374151;
+            max-height: 240px;
             overflow-y: auto;
+            line-height: 1.6;
+          }
+          .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+          }
+          .badge {
+            display: inline-block;
+            background: #eef2ff;
+            color: #4f46e5;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 12px;
+            margin-top: 4px;
           }
         </style>
       </head>
       <body>
         <div class="header">
-          <span class="icon">⚡</span>
-          <h1>Arjun Context</h1>
-        </div>
-
-        <div class="stat-box">
-          <div class="stat-label">Token Reduction</div>
-          <div class="stat-value">${reduction}%</div>
-          <div class="stat-secondary">
-            ${tokenReport.original} → ${tokenReport.compressed} tokens
+          <div class="icon">⚡</div>
+          <div>
+            <h1>Arjun Context</h1>
+            <div class="header-sub">Smart context selection &amp; compression</div>
           </div>
         </div>
 
-        <div class="stat-box">
-          <div class="stat-label">Estimated Savings</div>
-          <div class="stat-value">${stats.tokensSaved.toLocaleString()} tokens</div>
-          <div class="stat-secondary">~$${stats.costSaved}</div>
+        <div class="card">
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-label">Token Reduction</div>
+              <div class="stat-value">${reduction}%</div>
+              <div class="stat-secondary">${tokenReport.original} → ${tokenReport.compressed} tokens</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Estimated Savings</div>
+              <div class="stat-value">${(stats.tokensSaved || 0).toLocaleString()}</div>
+              <div class="stat-secondary">~$${stats.costSaved || '0.00'} saved</div>
+            </div>
+          </div>
         </div>
 
         ${
           topFiles && topFiles.length > 0
             ? `
-          <div class="files-section">
-            <h3>Relevant Files</h3>
-            ${topFiles
-              .slice(0, 5)
-              .map(
-                (f: any) => `
+          <div class="card">
+            <div class="files-section">
+              <h3>Relevant Files</h3>
+              ${topFiles
+                .slice(0, 5)
+                .map(
+                  (f: any) => `
               <div class="file-item">
                 <span class="file-name">${f.path}</span>
                 <span class="file-rank">${f.rank.toFixed(2)}</span>
               </div>
             `
-              )
-              .join('')}
+                )
+                .join('')}
+            </div>
           </div>
         `
             : ''

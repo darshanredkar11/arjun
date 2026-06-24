@@ -37,7 +37,6 @@ export class CacheManager {
   private initializeSchema(): void {
     this.db.exec(`
       CREATE TABLE IF NOT EXISTS file_cache (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
         filePath TEXT UNIQUE NOT NULL,
         hash TEXT NOT NULL,
         symbols TEXT NOT NULL,
@@ -46,25 +45,7 @@ export class CacheManager {
         createdAt INTEGER NOT NULL
       );
 
-      CREATE TABLE IF NOT EXISTS research_cache (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        hash TEXT UNIQUE NOT NULL,
-        summary TEXT NOT NULL,
-        contentType TEXT NOT NULL,
-        createdAt INTEGER NOT NULL
-      );
-
-      CREATE TABLE IF NOT EXISTS context_cache (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        hash TEXT UNIQUE NOT NULL,
-        compressedVersion TEXT NOT NULL,
-        original INTEGER NOT NULL,
-        compressed INTEGER NOT NULL,
-        createdAt INTEGER NOT NULL
-      );
-
       CREATE TABLE IF NOT EXISTS token_metrics (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
         date TEXT NOT NULL,
         tokensOriginal INTEGER NOT NULL,
         tokensCompressed INTEGER NOT NULL,
@@ -72,7 +53,6 @@ export class CacheManager {
       );
 
       CREATE INDEX IF NOT EXISTS idx_file_path ON file_cache(filePath);
-      CREATE INDEX IF NOT EXISTS idx_hash ON research_cache(hash);
     `);
   }
 

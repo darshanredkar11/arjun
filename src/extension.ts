@@ -53,7 +53,7 @@ export async function activate(context: vscode.ExtensionContext) {
           const context = await contextBuilder.buildOptimized(prompt, 4096);
 
           if (!statsPanel) {
-            statsPanel = new StatsPanel(context.extension.globalStoragePath);
+            statsPanel = new StatsPanel();
           }
           statsPanel.show(context);
         }
