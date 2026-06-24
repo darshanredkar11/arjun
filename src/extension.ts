@@ -25,7 +25,7 @@ export async function activate(context: vscode.ExtensionContext) {
   analyzer = new RepoAnalyzer(workspaceFolder.uri.fsPath);
   compressor = new Compressor();
   tokenEstimator = new TokenEstimator();
-  contextBuilder = new ContextBuilder(analyzer, compressor, tokenEstimator);
+  contextBuilder = new ContextBuilder(analyzer, compressor, tokenEstimator, workspaceFolder.uri.fsPath);
 
   // Initialize UI
   const treeProvider = new ArjunTreeProvider(analyzer);

@@ -20,11 +20,16 @@ export interface OptimizedContext {
 }
 
 export class ContextBuilder {
+  private workspaceRoot: string;
+
   constructor(
     private analyzer: RepoAnalyzer,
     private compressor: Compressor,
-    private tokenEstimator: TokenEstimator
-  ) {}
+    private tokenEstimator: TokenEstimator,
+    workspaceRoot?: string
+  ) {
+    this.workspaceRoot = workspaceRoot || process.cwd();
+  }
 
   async buildOptimized(prompt: string, tokenBudget: number): Promise<any> {
     const promptTokens = this.tokenEstimator.estimateTokens(prompt);
@@ -52,8 +57,7 @@ export class ContextBuilder {
       if (budgetRemaining < 200) break;
 
       try {
-        const fullPath = path.join(path.dirname(path.dirname(path.dirname(process.cwd()))), 'darshan', 'arjun');
-        const filePath = path.join(fullPath, file.path);
+        const filePath = path.join(this.workspaceRoot, file.path);
 
         if (!fs.existsSync(filePath)) continue;
 
