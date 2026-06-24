@@ -1,0 +1,194 @@
+╔═════════════════════════════════════════════════════════════════════════════╗
+║                  ARJUN SETUP FLOW - VISUAL GUIDE                             ║
+╚═════════════════════════════════════════════════════════════════════════════╝
+
+OPTION 1: KIRO (RECOMMENDED)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Step 1: Get API Key
+┌─────────────────────────────────────────────┐
+│ 1. Open: https://kiro.sh                    │
+│ 2. Sign In (or Sign Up)                     │
+│ 3. Click: API Keys (top right menu)         │
+│ 4. Click: "Create API Key"                  │
+│ 5. Copy the key (looks like: sk-kiro-...)  │
+│                                             │
+│ ✅ You now have: your Kiro API key          │
+└─────────────────────────────────────────────┘
+
+
+Step 2: Add Key to VSCode
+┌─────────────────────────────────────────────┐
+│ 1. Open VSCode                              │
+│ 2. Press: Cmd+, (Mac) or Ctrl+, (Windows)  │
+│    OR: File → Preferences → Settings        │
+│ 3. Search: arjun.kiro.apiKey                │
+│ 4. Paste your Kiro key in the text box      │
+│ 5. Close Settings (auto-saves)              │
+│                                             │
+│ ✅ VSCode now knows your Kiro API key       │
+└─────────────────────────────────────────────┘
+
+
+Step 3: Use It!
+┌─────────────────────────────────────────────┐
+│ 1. Open any code file (.js, .ts, .py, etc) │
+│ 2. Press: Cmd+Shift+P or Ctrl+Shift+P      │
+│ 3. Type: ask kiro                           │
+│ 4. Click: "Arjun: Ask Kiro ..."             │
+│ 5. Type your question:                      │
+│    "How does auth work?"                    │
+│    "Fix this bug"                           │
+│    "Explain this function"                  │
+│ 6. Press: Enter                             │
+│ 7. Wait: 5-10 seconds                       │
+│ 8. See: Kiro's answer on the right panel    │
+│                                             │
+│ ✅ You're using Arjun!                      │
+└─────────────────────────────────────────────┘
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+OPTION 2: CLAUDE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Step 1: Get Claude API Key
+┌─────────────────────────────────────────────┐
+│ 1. Open: https://console.anthropic.com      │
+│ 2. Click: API Keys (left sidebar)           │
+│ 3. Click: "Create Key"                      │
+│ 4. Copy it (looks like: sk-ant-...)         │
+│                                             │
+│ ✅ You now have: your Claude API key        │
+└─────────────────────────────────────────────┘
+
+
+Step 2: Add Key to VSCode
+┌─────────────────────────────────────────────┐
+│ 1. Press: Cmd+, (Mac) or Ctrl+, (Windows)  │
+│ 2. Search: arjun.claude.apiKey              │
+│ 3. Paste your Claude key in the text box    │
+│ 4. Close Settings                           │
+│                                             │
+│ ✅ VSCode now knows your Claude API key     │
+└─────────────────────────────────────────────┘
+
+
+Step 3: Use It!
+┌─────────────────────────────────────────────┐
+│ 1. Open any code file                       │
+│ 2. Press: Cmd+Shift+P or Ctrl+Shift+P      │
+│ 3. Type: ask claude                         │
+│ 4. Click: "Arjun: Ask Claude ..."           │
+│ 5. Type your question (same as Kiro)        │
+│ 6. Press: Enter                             │
+│ 7. Claude's answer appears on the right     │
+│                                             │
+│ ✅ Done!                                    │
+└─────────────────────────────────────────────┘
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+OPTION 3: MANUAL (NO API KEYS NEEDED)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+No Setup Required!
+┌─────────────────────────────────────────────┐
+│ 1. Open any code file in VSCode             │
+│ 2. Press: Cmd+Shift+P or Ctrl+Shift+P      │
+│ 3. Type: optimize                           │
+│ 4. Click: "Arjun: Build Optimized Context"  │
+│ 5. Click: "Copy Context to Clipboard"       │
+│ 6. Open: https://kiro.sh or ChatGPT.com    │
+│ 7. Paste the context in the chat box        │
+│ 8. Type your question after it              │
+│ 9. Send                                     │
+│                                             │
+│ ✅ Works with ANY AI tool!                  │
+│ ❌ Takes ~30 seconds (not 5 seconds)        │
+└─────────────────────────────────────────────┘
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+WHAT HAPPENS INSIDE ARJUN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+You ask:  "How does authentication work?"
+          ↓
+Arjun analyzes your code:
+  • Finds all auth-related files
+  • Extracts function signatures
+  • Removes unrelated code
+  • Compresses 50-70%
+          ↓
+Sends to Kiro/Claude:
+  • Full context (but much smaller)
+  • Your question
+  • Kiro/Claude sees everything they need
+          ↓
+Gets answer:
+  • Same quality as uncompressed
+  • But 68% cheaper to send
+  • And 5 seconds instead of 30 seconds
+          ↓
+Shows you the answer in VSCode
+
+You save: Time + Money + Context Window
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+QUICK REFERENCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+VSCode Settings Shortcut:
+  Mac:     Cmd+,
+  Windows: Ctrl+,
+  Or:      File → Preferences → Settings
+
+Command Palette Shortcut:
+  Mac:     Cmd+Shift+P
+  Windows: Ctrl+Shift+P
+
+Search For:
+  Kiro:     "arjun.kiro.apiKey"
+  Claude:   "arjun.claude.apiKey"
+
+Commands:
+  "Ask Kiro"    - Send to Kiro with context
+  "Ask Claude"  - Send to Claude with context
+  "Analyze"     - Scan your code (free, no API needed)
+  "Build Optimized Context" - Generate compressed context to copy
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TROUBLESHOOTING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Problem: "API key not configured"
+Solution:
+  1. Double-check you pasted the key correctly (no extra spaces)
+  2. Make sure you're searching for "arjun.kiro.apiKey" (exact spelling)
+  3. Restart VSCode
+  4. Try again
+
+Problem: Command doesn't appear in Cmd+Shift+P
+Solution:
+  1. Make sure you have a code file open
+  2. Try typing just "kiro" or "claude"
+  3. Restart VSCode
+  4. Check your VSCode version is 1.80+
+
+Problem: It's slow or not working
+Solution:
+  1. Check your internet connection
+  2. Verify API key is correct
+  3. Make sure the service (Kiro/Claude) is working
+  4. Try opening a different code file
+
+
+Need more help? Read: SIMPLE_SETUP.md
