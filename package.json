@@ -31,6 +31,14 @@
       {
         "command": "arjun.compressLogs",
         "title": "Arjun: Compress Logs"
+      },
+      {
+        "command": "arjun.askKiro",
+        "title": "Arjun: Ask Kiro (with optimized context)"
+      },
+      {
+        "command": "arjun.askClaude",
+        "title": "Arjun: Ask Claude (with optimized context)"
       }
     ],
     "viewsContainers": {
@@ -55,6 +63,27 @@
           "type": "tree"
         }
       ]
+    },
+    "configuration": {
+      "title": "Arjun",
+      "properties": {
+        "arjun.kiro.apiKey": {
+          "type": "string",
+          "description": "Kiro API Key (from https://kiro.sh)",
+          "scope": "window"
+        },
+        "arjun.kiro.endpoint": {
+          "type": "string",
+          "description": "Kiro API Endpoint",
+          "default": "https://kiro.sh/api",
+          "scope": "window"
+        },
+        "arjun.claude.apiKey": {
+          "type": "string",
+          "description": "Claude API Key (from https://console.anthropic.com)",
+          "scope": "window"
+        }
+      }
     }
   },
   "scripts": {
