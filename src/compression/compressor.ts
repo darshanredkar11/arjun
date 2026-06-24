@@ -1,3 +1,14 @@
+import { ContentDetector, ContentType } from './contentDetector';
+import {
+  ProtobufCompressor,
+  GraphQLCompressor,
+  SqlCompressor,
+  XmlCompressor,
+  CsvCompressor,
+  YamlCompressor,
+  DiffCompressor,
+} from './customCompressors';
+
 interface CompressionResult {
   original: number;
   compressed: number;
@@ -6,6 +17,42 @@ interface CompressionResult {
 }
 
 export class Compressor {
+  private detector = new ContentDetector();
+  private protobufCompressor = new ProtobufCompressor();
+  private graphqlCompressor = new GraphQLCompressor();
+  private sqlCompressor = new SqlCompressor();
+  private xmlCompressor = new XmlCompressor();
+  private csvCompressor = new CsvCompressor();
+  private yamlCompressor = new YamlCompressor();
+  private diffCompressor = new DiffCompressor();
+
+  compressContent(content: string, filename?: string): CompressionResult {
+    const detection = this.detector.detect(content, filename);
+
+    switch (detection.type) {
+      case 'protobuf':
+        return this.protobufCompressor.compress(content);
+      case 'graphql':
+        return this.graphqlCompressor.compress(content);
+      case 'sql':
+        return this.sqlCompressor.compress(content);
+      case 'xml':
+        return this.xmlCompressor.compress(content);
+      case 'csv':
+        return this.csvCompressor.compress(content);
+      case 'yaml':
+        return this.yamlCompressor.compress(content);
+      case 'diff':
+        return this.diffCompressor.compress(content);
+      case 'logs':
+        return this.compressLogs(content);
+      case 'json':
+        return this.compressJson(content);
+      default:
+        return this.compressCode(content, filename || 'unknown');
+    }
+  }
+
   compressCode(content: string, language: string): CompressionResult {
     const original = this.estimateTokens(content);
 

@@ -71,6 +71,8 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "js-tokens": "^9.0.0"
+    "better-sqlite3": "^12.11.1",
+    "js-tokens": "^9.0.0",
+    "web-tree-sitter": "^0.26.9"
   }
 }

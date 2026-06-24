@@ -1,6 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
+import { CacheManager } from '../cache/cacheManager';
+import { TreeSitterExtractor } from './treeSitterExtractor';
 
 interface FileNode {
   path: string;
@@ -18,6 +20,8 @@ interface RepoMap {
 export class RepoAnalyzer {
   private repoPath: string;
   private repoMap: RepoMap = { files: [], graph: new Map() };
+  private cache: CacheManager;
+  private extractor: TreeSitterExtractor;
   private excludePatterns = [
     'node_modules',
     '.git',
@@ -28,10 +32,13 @@ export class RepoAnalyzer {
     '.pytest_cache',
     'target',
     '.gradle',
+    '.arjun',
   ];
 
   constructor(repoPath: string) {
     this.repoPath = repoPath;
+    this.cache = new CacheManager(repoPath);
+    this.extractor = new TreeSitterExtractor();
   }
 
   async analyze(): Promise<RepoMap> {
@@ -87,13 +94,32 @@ export class RepoAnalyzer {
 
   private analyzeFile(filePath: string): FileNode {
     const relativePath = path.relative(this.repoPath, filePath);
-    const content = fs.readFileSync(filePath, 'utf-8');
     const stats = fs.statSync(filePath);
 
-    // Extract symbols (classes, functions, constants)
-    const symbols = this.extractSymbols(content, filePath);
-    // Extract references (imports, requires, etc.)
-    const refs = this.extractReferences(content);
+    // Check cache first
+    const cached = this.cache.getFileCache(relativePath, stats.mtimeMs);
+    if (cached) {
+      return {
+        path: relativePath,
+        rank: 0,
+        symbols: cached.symbols,
+        refs: cached.refs,
+        size: stats.size,
+      };
+    }
+
+    const content = fs.readFileSync(filePath, 'utf-8');
+
+    // Extract symbols using Tree-Sitter extractor (more accurate)
+    const symbols = this.extractor
+      .extractSymbols(content, filePath)
+      .map((s) => s.name);
+
+    // Extract references
+    const refs = this.extractor.extractReferences(content, filePath);
+
+    // Cache the result
+    this.cache.setFileCache(relativePath, stats.mtimeMs, symbols, refs);
 
     return {
       path: relativePath,
@@ -104,65 +130,6 @@ export class RepoAnalyzer {
     };
   }
 
-  private extractSymbols(content: string, filePath: string): string[] {
-    const symbols: string[] = [];
-    const ext = path.extname(filePath);
-
-    if (['.ts', '.js', '.tsx', '.jsx'].includes(ext)) {
-      // JavaScript/TypeScript patterns
-      const classPattern = /(?:export\s+)?(?:class|interface|type)\s+(\w+)/g;
-      const funcPattern = /(?:export\s+)?(?:async\s+)?function\s+(\w+)|(\w+)\s*:\s*(?:async\s+)?\(.+\)\s*=>/g;
-      const constPattern = /(?:export\s+)?const\s+(\w+)/g;
-
-      let match;
-      while ((match = classPattern.exec(content)) !== null) symbols.push(match[1]);
-      while ((match = funcPattern.exec(content)) !== null) symbols.push(match[1] || match[2]);
-      while ((match = constPattern.exec(content)) !== null) symbols.push(match[1]);
-    } else if (ext === '.py') {
-      // Python patterns
-      const classPattern = /^class\s+(\w+)/gm;
-      const funcPattern = /^def\s+(\w+)/gm;
-
-      let match;
-      while ((match = classPattern.exec(content)) !== null) symbols.push(match[1]);
-      while ((match = funcPattern.exec(content)) !== null) symbols.push(match[1]);
-    } else if (ext === '.java') {
-      // Java patterns
-      const classPattern = /(?:public\s+)?class\s+(\w+)/g;
-      const methodPattern = /(?:public|private|protected)?\s*(?:static\s+)?(?:\w+\s+)*(\w+)\s*\(/g;
-
-      let match;
-      while ((match = classPattern.exec(content)) !== null) symbols.push(match[1]);
-      while ((match = methodPattern.exec(content)) !== null) {
-        const sym = match[1];
-        if (!sym.match(/^\d/)) symbols.push(sym);
-      }
-    }
-
-    return [...new Set(symbols)];
-  }
-
-  private extractReferences(content: string): string[] {
-    const refs: string[] = [];
-
-    // Import/require patterns
-    const importPatterns = [
-      /import\s+(?:\{\s*([^}]+)\s*\}|['"*\w]+)\s+from\s+['"]([^'"]+)['"]/g,
-      /require\s*\(\s*['"]([^'"]+)['"]\s*\)/g,
-      /from\s+([\w.]+)\s+import/g,
-      /import\s+([\w.]+)/g,
-    ];
-
-    for (const pattern of importPatterns) {
-      let match;
-      while ((match = pattern.exec(content)) !== null) {
-        if (match[1]) refs.push(match[1]);
-        if (match[2]) refs.push(match[2]);
-      }
-    }
-
-    return [...new Set(refs)];
-  }
 
   private buildDependencyGraph(): void {
     const graph = new Map<string, string[]>();

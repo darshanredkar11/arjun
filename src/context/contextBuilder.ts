@@ -67,16 +67,10 @@ export class ContextBuilder {
         // Check if file fits in budget
         if (fileTokens > budgetRemaining) continue;
 
-        // Compress file
-        const ext = path.extname(filePath);
-        let compressed = content;
-        let compressedFileTokens = fileTokens;
-
-        if (['.ts', '.js', '.tsx', '.jsx', '.py', '.java'].includes(ext)) {
-          const result = this.compressor.compressCode(content, ext.slice(1));
-          compressed = result.content;
-          compressedFileTokens = result.compressed;
-        }
+        // Compress file (auto-detects content type)
+        const result = this.compressor.compressContent(content, file.path);
+        const compressed = result.content;
+        const compressedFileTokens = result.compressed;
 
         compressedCode.set(file.path, compressed);
         originalTokens += fileTokens;
